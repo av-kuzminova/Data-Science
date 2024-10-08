@@ -67,13 +67,14 @@
 Запрос: 
 POST /api/users HTTP/1.1
 Host: localhost:8080
-Content-Type: application/json
+Content-Type: application/json  
 
 {
     "username": "newuser",
     "email": "newuser@example.com",
     "fullName": "John Doe"
-}
+}  
+
 Ответ: 
 {
     "id": 1,
@@ -84,7 +85,8 @@ Content-Type: application/json
 ### 2. Поиск пользователя по логину
 Запрос:
 GET /api/users?username=newuser HTTP/1.1
-Host: localhost:8080
+Host: localhost:8080  
+
 Ответ:
 {
     "id": 1,
@@ -95,7 +97,8 @@ Host: localhost:8080
 ### 3. Поиск пользователя по маске (имя и фамилия)
 Запрос:
 GET /api/users/search?name=John%20Doe HTTP/1.1
-Host: localhost:8080
+Host: localhost:8080  
+
 Ответ:
 [
     {
@@ -110,11 +113,11 @@ Host: localhost:8080
 POST /api/folders HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
-
 {
     "folderName": "Important",
     "userId": 1
-}
+}  
+
 Ответ:
 {
     "id": 1,
@@ -124,14 +127,16 @@ Content-Type: application/json
 ### 5. Получение перечня всех папок
 Запрос:
 GET /api/folders?userId=1 HTTP/1.1
-Host: localhost:8080
+Host: localhost:8080  
+
 Ответ:
 [
     {
         "id": 1,
         "folderName": "Inbox",
         "userId": 1
-    },
+    },  
+    
     {
         "id": 2,
         "folderName": "Sent",
@@ -142,14 +147,14 @@ Host: localhost:8080
 Запрос:
 POST /api/folders/1/emails HTTP/1.1
 Host: localhost:8080
-Content-Type: application/json
+Content-Type: application/json  
 
 {
     "subject": "Meeting Reminder",
     "content": "Don't forget about the meeting tomorrow.",
     "sender": "newuser@example.com",
     "recipients": ["john.doe@example.com"]
-}
+}  
 Ответ:
 {
     "id": 1,
@@ -162,7 +167,8 @@ Content-Type: application/json
 ### 7. Получение всех писем в папке
 Запрос:
 GET /api/folders/1/emails HTTP/1.1
-Host: localhost:8080
+Host: localhost:8080  
+
 Ответ:
 [
     {
