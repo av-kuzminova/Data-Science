@@ -135,8 +135,7 @@ Host: localhost:8080
         "id": 1,
         "folderName": "Inbox",
         "userId": 1
-    },  
-    
+    },
     {
         "id": 2,
         "folderName": "Sent",
