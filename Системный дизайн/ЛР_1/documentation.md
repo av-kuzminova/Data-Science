@@ -128,7 +128,6 @@ Content-Type: application/json
 Запрос:
 GET /api/folders?userId=1 HTTP/1.1
 Host: localhost:8080  
-
 Ответ:
 [
     {
