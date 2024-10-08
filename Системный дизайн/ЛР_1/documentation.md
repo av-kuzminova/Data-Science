@@ -146,7 +146,6 @@ Host: localhost:8080
 POST /api/folders/1/emails HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json  
-
 {
     "subject": "Meeting Reminder",
     "content": "Don't forget about the meeting tomorrow.",
@@ -166,7 +165,6 @@ Content-Type: application/json
 Запрос:
 GET /api/folders/1/emails HTTP/1.1
 Host: localhost:8080  
-
 Ответ:
 [
     {
