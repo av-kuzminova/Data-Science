@@ -8,6 +8,22 @@ workspace {
         emailSystem = softwareSystem "Приложение электронной почты (Outlook)" {
             description "Система для управления электронной почтой."
 
+            // Основные агрегаты
+            userAccount = container "Учетная запись пользователя" {
+                description "Содержит информацию о пользователе и его предпочтениях."
+                technology "Java, Spring Boot"
+            }
+
+            emailMessage = container "Сообщение электронной почты" {
+                description "Содержит данные о сообщении, включая отправителя, получателя, тему и содержание."
+                technology "Java, Spring Boot"
+            }
+
+            inbox = container "Входящие сообщения" {
+                description "Содержит все входящие сообщения пользователя."
+                technology "Java, Spring Boot"
+            }
+
             ui = container "Пользовательский интерфейс" {
                 description "Веб-приложение для доступа к электронной почте."
                 technology "HTML, CSS, JavaScript"
@@ -31,6 +47,9 @@ workspace {
         // Определение взаимодействий
         user -> ui "Заполняет форму и отправляет сообщение"
         ui -> appServer "Отправляет данные формы"
+        appServer -> userAccount "Проверяет учетные данные"
+        appServer -> emailMessage "Создает новое сообщение"
+        appServer -> inbox "Сохраняет сообщение во входящих"
         appServer -> database "Сохраняет сообщение в базе данных"
         appServer -> externalMailServer "Отправляет электронное письмо"
         externalMailServer -> appServer "Подтверждение отправки"
@@ -38,12 +57,29 @@ workspace {
     }
 
     views {
+        // Диаграмма контекста
+        systemContext emailSystem {
+            title "Диаграмма контекста приложения электронной почты"
+            include *
+            autolayout lr
+        }
+
+        // Диаграмма контейнеров
+        container emailSystem {
+            title "Контейнерная диаграмма приложения электронной почты"
+            include *
+            autolayout lr
+        }
+
+        // Динамическая диаграмма отправки электронного письма
         dynamic emailSystem {
             title "Динамическая диаграмма отправки электронного письма"
-            
+
             // Определяем участников динамической диаграммы
             user -> ui "Заполняет форму и отправляет сообщение"
             ui -> appServer "Отправляет данные формы"
+            appServer -> emailMessage "Создает новое сообщение"
+            appServer -> inbox "Сохраняет сообщение во входящих"
             appServer -> database "Сохраняет сообщение в базе данных"
             appServer -> externalMailServer "Отправляет электронное письмо"
             externalMailServer -> appServer "Подтверждение отправки"
