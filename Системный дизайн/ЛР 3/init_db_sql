@@ -1,56 +1,28 @@
--- Создание базы данных
-CREATE DATABASE mail_service;
+# init_db.py
 
--- Переключаемся на созданную базу данных
-\c mail_service;
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from models import Base, User
+from passlib.context import CryptContext
+import os
 
--- Создание таблицы пользователей
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    full_name VARCHAR(100),
-    email VARCHAR(100) UNIQUE,
-    hashed_password VARCHAR(100) NOT NULL
-);
+# Получаем URL базы данных из переменных окружения
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/my_service")
 
--- Индекс по полю username
-CREATE INDEX idx_users_username ON users (username);
-CREATE INDEX idx_users_full_name ON users (full_name);
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
--- Создание таблицы папок
-CREATE TABLE folders (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    user_id INTEGER REFERENCES users (id) ON DELETE CASCADE
-);
+# Инициализация базы данных
+def init_db():
+    Base.metadata.create_all(bind=engine)
+    db = SessionLocal()
+    # Добавляем пользователя admin
+    password_hash = pwd_context.hash("secret")
+    admin_user = User(username="admin", password_hash=password_hash)
+    db.add(admin_user)
+    db.commit()
+    db.close()
 
--- Индекс по полю name
-CREATE INDEX idx_folders_name ON folders (name);
-
--- Создание таблицы сообщений
-CREATE TABLE messages (
-    id SERIAL PRIMARY KEY,
-    subject VARCHAR(255),
-    content TEXT,
-    sender VARCHAR(100),
-    recipient VARCHAR(100),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    folder_id INTEGER REFERENCES folders (id) ON DELETE CASCADE
-);
-
--- Индекс по полю created_at
-CREATE INDEX idx_messages_created_at ON messages (created_at);
-
--- Вставка тестовых данных
-INSERT INTO users (username, full_name, email, hashed_password)
-VALUES 
-('admin', 'Master Admin', 'admin@example.com', '<hashed_password_here>');
-
-INSERT INTO folders (name, user_id)
-VALUES 
-('Inbox', 1),
-('Sent', 1);
-
-INSERT INTO messages (subject, content, sender, recipient, folder_id)
-VALUES 
-('Welcome', 'Welcome to your mailbox!', 'admin@example.com', 'user@example.com', 1);
+if __name__ == "__main__":
+    init_db()
