@@ -12,8 +12,18 @@ A = np.array([
 
 b = np.array([0, 5, 0, 6, -2, 6], dtype=float)
 
-# Решаем систему линейных уравнений A y = b
-y = np.linalg.solve(A, b)
+# Начальное приближение и параметры алгоритма
+y = np.zeros(6)  # Начальное приближение y_0 = 0
+tolerance = 1e-6  # Порог сходимости
+max_iterations = 1000  # Максимальное количество итераций
+
+# Метод наискорейшего спуска
+for _ in range(max_iterations):
+    gradient = 2 * A @ y - 2 * b  # Вычисляем градиент ∇f(y)
+    if np.linalg.norm(gradient) < tolerance:  # Проверка на сходимость
+        break
+    alpha = (gradient @ gradient) / (gradient @ A @ gradient)  # Оптимальный шаг
+    y = y - alpha * gradient  # Обновляем y
 
 # Вычисляем L2-норму найденного решения
 x_star_norm = np.linalg.norm(y, ord=2)
