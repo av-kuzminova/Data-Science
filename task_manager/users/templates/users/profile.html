@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль пользователя</title>
+</head>
+<body>
+    <h2>Мой профиль</h2>
+    
+    <h3>Мои проекты</h3>
+    {% if user_projects %}
+        <ul>
+            {% for project in user_projects %}
+                <li>{{ project.title }} - Роль: {{ project.owner }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>У вас нет проектов.</p>
+    {% endif %}
+
+    <h3>Мои задачи</h3>
+    {% if user_tasks %}
+        <ul>
+            {% for task in user_tasks %}
+                <li>{{ task.title }} - Статус: {{ task.status }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>У вас нет задач.</p>
+    {% endif %}
+
+    <br>
+    <a href="{% url 'users:logout' %}">Выйти</a>
+</body>
+</html>

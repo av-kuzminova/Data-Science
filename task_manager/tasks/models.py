@@ -1,37 +1,24 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from projects.models import Project
 
-# Модель проекта
-class Project(models.Model):
-    name = models.CharField(max_length=200)
-    description = models.TextField()
-    owner = models.ForeignKey(User, related_name='projects', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+User = get_user_model()
 
-    def __str__(self):
-        return self.name
-
-# Модель задачи
 class Task(models.Model):
-    PRIORITY_CHOICES = [
-        ('low', 'Low'),
-        ('medium', 'Medium'),
-        ('high', 'High'),
-    ]
     STATUS_CHOICES = [
-        ('new', 'New'),
-        ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),
+        ("to_do", "В работу"),
+        ("in_progress", "В работе"),
+        ("done", "Выполнен"),
+        ("cancelled", "Отменен"),
     ]
-    
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    due_date = models.DateTimeField()
-    priority = models.CharField(choices=PRIORITY_CHOICES, max_length=10)
-    status = models.CharField(choices=STATUS_CHOICES, max_length=20, default='new')
-    project = models.ForeignKey(Project, related_name='tasks', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+
+    title = models.CharField(max_length=255, verbose_name="Заголовок")
+    description = models.TextField(verbose_name="Описание", blank=True, null=True)
+    executor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="tasks")
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="tasks")
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="to_do")
+    estimated_hours = models.FloatField(verbose_name="Оценка в часах", blank=True, null=True)
+    attachment = models.TextField(verbose_name="Текстовое вложение", blank=True, null=True)
 
     def __str__(self):
         return self.title
-
