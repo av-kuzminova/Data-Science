@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+    <style>
+        /* Центрируем форму на экране */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2 class="ui header">Регистрация</h2>
+        <form class="ui form" method="post" action="{% url 'register' %}">
+            {% csrf_token %}
+            {{ form.as_p }}  <!-- Это отобразит все поля формы -->
+            <button class="ui teal basic button" type="submit">Зарегистрироваться</button>
+        </form>
+
+        <div class="ui message" style="margin-top: 20px;">
+            <span>Уже есть аккаунт? </span><a href="{% url 'login' %}">Войти</a>
+        </div>
+    </div>
+</body>
+</html>
